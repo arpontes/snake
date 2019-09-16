@@ -1,26 +1,40 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+﻿import React, { useState, useEffect } from 'react';
+import GameEngine from './Game/GameEngine';
 
+import GameObjectContext from './Context';
+import Game from './Game';
+import GameNotStarted from './GameNotStarted';
+
+import { makeStyles } from '@material-ui/styles';
+
+const boardSizePx = 500;
+const useStyles = makeStyles({ root: { position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" } });
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+    const [gameState, setGameState] = useState(null);
+    const [gameEngine, setGameEngine] = useState(null);
 
+    useEffect(() => setGameEngine(new GameEngine(data => setGameState(data))), []);
+
+    const isPlaying = gameState && gameState.IsPlaying;
+    useEffect(() => {
+        if (gameState && gameState.IsPlaying) {
+            const handleInput = ev => {
+                gameEngine.HandleInput(ev.keyCode);
+                ev.preventDefault();
+            };
+            window.addEventListener("keydown", handleInput);
+            return () => window.removeEventListener("keydown", handleInput);
+        }
+    }, [isPlaying]);
+
+    const classes = useStyles();
+
+    return gameEngine &&
+        <GameObjectContext.Provider value={{ gameEngine, gameState }}>
+            <div className={classes.root} style={{ width: `${boardSizePx}px` }}>
+                <GameNotStarted />
+                {gameState && <Game BoardSize={boardSizePx} />}
+            </div>
+        </GameObjectContext.Provider>;
+}
 export default App;
