@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <title>Non-React App</title>
+
+    <link href="nonReact.css" rel="stylesheet" />
+
+    <script type="text/javascript" src="Game.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        var gameObj;
+        var boardSizePx = 500;
+        document.addEventListener("readystatechange", function () {
+            if (document.readyState == "interactive") {
+                gameObj = new GameEngine(draw);
+                draw({});
+                window.addEventListener("keydown", ev => {
+                    if (gameObj.HandleInput(ev.keyCode))
+                        ev.preventDefault();
+                });
+
+                for (var i in GameModels)
+                    $(".gameModels").append($("<label />").append($("<input type=radio name=gameModel />").val(i)).append($("<span />").text(i)));
+            }
+        });
+        function startGame() {
+            $(".rootGame").css({ width: boardSizePx.toString() + "px", height: boardSizePx.toString() + "px" });
+            $(".started").css({ width: boardSizePx.toString() + "px" });
+
+            var gameModel = $(".gameModels input[type=radio]:checked").val();
+            if (gameModel == null)
+                alert("Selecione a dificuldade!");
+            else
+                gameObj.Start(GameModels[gameModel]);
+        }
+
+        function draw(gameData) {
+            if (!gameData.Snake) {
+                $(".notStarted").show();
+                $(".started").hide();
+            } else {
+                if (gameData.IsPlaying)
+                    $(".notStarted").hide();
+                else
+                    $(".notStarted").show();
+                $(".started").show();
+
+                $("#totalPoints").text("Pontos: " + Math.floor(gameData.TotalFrames * gameData.GameConfig.GetSpeed()));
+                $("#state").text(gameData.IsPaused ? "Pausado" : (gameData.IsPlaying ? "Jogando" : ""));
+
+                if (gameData.HasCollision) $("#lose").show();
+                else $("#lose").hide();
+
+                var root = $(".rootGame").empty();
+                var size = boardSizePx / gameData.GameConfig.GetSize();
+
+                root.append(gameData.GameConfig.GetWalls().map(x => createScreenEl(size, x, "wallBlock")));
+
+                var snakeParts = gameData.Snake.map(x => createScreenEl(size, x, "snakeBody"));
+                snakeParts[0].addClass("head").addClass(gameData.Direction);
+                snakeParts[snakeParts.length - 1].addClass("tail");
+                root.append(snakeParts);
+
+                if (gameData.Apple != null)
+                    root.append(createScreenEl(size, gameData.Apple, "apple"));
+            }
+        }
+        function createScreenEl(size, pos, clsName) {
+            return $("<div />").addClass(clsName).css({
+                width: size.toString() + "px", height: size.toString() + "px",
+                left: (pos.x * size).toString() + "px", top: (pos.y * size).toString() + "px"
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="started centeredPosition">
+        <div class="topBar">
+            <div id="totalPoints"></div>
+            <div id="lose">Você perdeu!</div>
+            <div id="state"></div>
+        </div>
+        <div class="rootGame"></div>
+    </div>
+    <div class="notStarted centeredPosition">
+        <span class="title">Escolha uma dificuldade para iniciar o jogo!</span>
+        <div style="display:flex;flex-direction:column;">
+            <div class="gameModels"></div>
+            <div>
+                <input type="button" onclick="javascript: startGame();" value="Iniciar" />
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -18,10 +18,7 @@ function App() {
     const isPlaying = gameState && gameState.IsPlaying;
     useEffect(() => {
         if (gameState && gameState.IsPlaying) {
-            const handleInput = ev => {
-                gameEngine.HandleInput(ev.keyCode);
-                ev.preventDefault();
-            };
+            const handleInput = ev => gameEngine.HandleInput(ev.keyCode) && ev.preventDefault();
             window.addEventListener("keydown", handleInput);
             return () => window.removeEventListener("keydown", handleInput);
         }

@@ -2,7 +2,7 @@
   "name": "snake",
   "version": "0.1.0",
   "private": true,
-  "homepage": "/",
+  "homepage": ".",
   "dependencies": {
     "@material-ui/core": "^4.4.2",
     "react": "^16.9.0",

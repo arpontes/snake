@@ -4,17 +4,19 @@ import Typography from '@material-ui/core/Typography';
 
 import { makeStyles } from '@material-ui/styles';
 
+import imgApple from './images/apple.png';
+import imgSnakeHead from './images/head.png';
 
 const blockStyles = {
     wallBlock: { borderRadius: "0", backgroundColor: "gray" },
-    apple: { borderColor: "transparent", backgroundImage: "url(apple.png)", backgroundRepeat: "no-repeat", backgroundSize: "contain" },
+    apple: { borderColor: "transparent", backgroundImage: `url(${imgApple})`, backgroundRepeat: "no-repeat", backgroundSize: "contain" },
     snakeBody: { borderColor: "#34560f", backgroundColor: "#89b929", transform: "scale(.9)" }
 };
 const snakeHead = {
     ...blockStyles.snakeBody,
     borderColor: "transparent",
     backgroundColor: "transparent",
-    backgroundImage: "url(head.png)",
+    backgroundImage: `url(${imgSnakeHead})`,
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",
     backgroundPosition: "4px center"
