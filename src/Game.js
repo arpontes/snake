@@ -1,4 +1,4 @@
-﻿import React from 'react';
+﻿import React, { useContext } from 'react';
 import GameObjectContext from './Context';
 import Typography from '@material-ui/core/Typography';
 
@@ -31,26 +31,22 @@ const Direction = {
 const useGameStyles = makeStyles({ root: { position: "relative", border: "1px solid lightgray" } });
 export default function Game(props) {
     const classes = useGameStyles();
+    const { gameState } = useContext(GameObjectContext);
+
+    const cfg = gameState.GameConfig;
+    const size = props.BoardSize / cfg.GetSize();
+
+    const buildSnakeClassObject = isHead => isHead ? gameState.Direction : "snakeBody";
 
     return (
-        <GameObjectContext.Consumer>
-            {({ gameState }) => {
-                const cfg = gameState.GameConfig;
-                const size = props.BoardSize / cfg.GetSize();
-
-                const buildSnakeClassObject = isHead => isHead ? gameState.Direction : "snakeBody";
-                return (
-                    <>
-                        <StateBar gameState={gameState} />
-                        <div className={classes.root} style={{ width: `${props.BoardSize}px`, height: `${props.BoardSize}px` }}>
-                            {cfg.GetWalls().map((point, idx) => <Block key={idx} size={size} point={point} className="wallBlock" />)}
-                            {gameState.Snake.map((point, idx) => <Block key={idx} size={size} point={point} className={buildSnakeClassObject(idx === 0)} />)}
-                            {gameState.Apple && <Block size={size} point={gameState.Apple} className="apple" />}
-                        </div>
-                    </>
-                );
-            }}
-        </GameObjectContext.Consumer>
+        <>
+            <StateBar gameState={gameState} />
+            <div className={classes.root} style={{ width: `${props.BoardSize}px`, height: `${props.BoardSize}px` }}>
+                {cfg.GetWalls().map((point, idx) => <Block key={idx} size={size} point={point} className="wallBlock" />)}
+                {gameState.Snake.map((point, idx) => <Block key={idx} size={size} point={point} className={buildSnakeClassObject(idx === 0)} />)}
+                {gameState.Apple && <Block size={size} point={gameState.Apple} className="apple" />}
+            </div>
+        </>
     );
 }
 

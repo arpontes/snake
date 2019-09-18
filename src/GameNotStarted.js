@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import GameModels from './Game/GameModels';
 import GameObjectContext from './Context';
 
@@ -20,20 +20,18 @@ function PaperComponent(props) {
 const useStyles = makeStyles({ root: { cursor: "move" } });
 function GameNotStarted() {
     const classes = useStyles();
+    const { gameEngine, gameState } = useContext(GameObjectContext);
+
     return (
-        <GameObjectContext.Consumer>
-            {({ gameEngine, gameState }) => (
-                <Dialog open={!gameState || !gameState.IsPlaying} PaperComponent={PaperComponent}>
-                    <DialogTitle className={classes.root}>Escolha uma dificuldade para iniciar o jogo!</DialogTitle>
-                    <List>
-                        {Object.keys(GameModels).map(level => (
-                            <ListItem key={level} button onClick={() => gameEngine.Start(GameModels[level])}>
-                                <ListItemText primary={level} />
-                            </ListItem>
-                        ))}
-                    </List>
-                </Dialog>
-            )}
-        </GameObjectContext.Consumer>
+        <Dialog open={!gameState || !gameState.IsPlaying} PaperComponent={PaperComponent}>
+            <DialogTitle className={classes.root}>Escolha uma dificuldade para iniciar o jogo!</DialogTitle>
+            <List>
+                {Object.keys(GameModels).map(level => (
+                    <ListItem key={level} button onClick={() => gameEngine.Start(GameModels[level])}>
+                        <ListItemText primary={level} />
+                    </ListItem>
+                ))}
+            </List>
+        </Dialog>
     );
 } export default GameNotStarted;
