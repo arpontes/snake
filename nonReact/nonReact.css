@@ -1,0 +1,91 @@
+body {
+    font-family: Calibri;
+}
+
+.snakeBody, .wallBlock, .apple {
+    position: absolute;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 50%;
+}
+
+.snakeBody {
+    border-color: #34560f;
+    background-color: #89b929;
+    transform: scale(.9);
+}
+
+    .snakeBody.head {
+        border-color: transparent;
+        background-color: transparent;
+        background-image: url(head.png);
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: 4px center;
+        transform: scale(1.8);
+    }
+
+        .snakeBody.head.Top {
+            transform: scale(1.8) rotate(-90deg);
+        }
+
+        .snakeBody.head.Bottom {
+            transform: scale(1.8) rotate(90deg);
+        }
+
+        .snakeBody.head.Left {
+            transform: scale(1.8) rotate(-180deg);
+        }
+
+.wallBlock {
+    border-radius: 0;
+    background-color: gray;
+}
+
+.apple {
+    border-color: transparent;
+    background-image: url(apple.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.centeredPosition {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.notStarted {
+    text-align: center;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    background-color: white;
+    padding: 1em;
+    box-shadow: 0px 0px 20px -6px rgba(0,0,0,1);
+}
+
+    .notStarted .title {
+        display: inline-block;
+    }
+
+    .notStarted .gameModels {
+        padding: 1em;
+    }
+
+    .notStarted label {
+        margin: 1em;
+        display: inline-flex;
+        align-items: center;
+    }
+
+.topBar {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.rootGame {
+    position: relative;
+    border: 1px solid lightgray;
+}
