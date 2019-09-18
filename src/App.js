@@ -4,10 +4,11 @@ import GameEngine from './Game/GameEngine';
 import GameObjectContext from './Context';
 import Game from './Game';
 import GameNotStarted from './GameNotStarted';
+import Controller from './Controller';
 
 import { makeStyles } from '@material-ui/styles';
 
-const boardSizePx = 500;
+const boardSizePx = Math.min(window.innerWidth, 500);
 const useStyles = makeStyles({ root: { position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" } });
 function App() {
     const [gameState, setGameState] = useState(null);
@@ -30,7 +31,8 @@ function App() {
         <GameObjectContext.Provider value={{ gameEngine, gameState }}>
             <div className={classes.root} style={{ width: `${boardSizePx}px` }}>
                 <GameNotStarted />
-                {gameState && <Game BoardSize={boardSizePx} />}
+            {gameState && <Game BoardSize={boardSizePx} />}
+            {isPlaying && <Controller IsPaused={gameState.IsPaused} HandleInput={gameEngine.HandleInput} />}
             </div>
         </GameObjectContext.Provider>;
 }

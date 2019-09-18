@@ -5,6 +5,7 @@
   "homepage": ".",
   "dependencies": {
     "@material-ui/core": "^4.4.2",
+    "@material-ui/icons": "^4.4.1",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-draggable": "^4.0.3",
