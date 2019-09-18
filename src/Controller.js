@@ -1,7 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { ArrowBack, ArrowForward, ArrowUpward, ArrowDownward, Pause, PlayArrow } from '@material-ui/icons';
-import Fab from '@material-ui/core/Fab';
 
 const buttonSize = 70;
 const halfSize = buttonSize / 2;
@@ -23,8 +22,8 @@ function Controller(props) {
 
 function CtrlButton(props) {
     return (
-        <Fab style={{ opacity: ".4", position: "absolute", width: `${buttonSize}px`, height: `${buttonSize}px`, ...props.Position }} onClick={props.onClick}>
+        <div style={{ opacity: ".4", position: "absolute", width: `${buttonSize}px`, height: `${buttonSize}px`, ...props.Position }} onClick={props.onClick}>
             {props.Icon}
-        </Fab>
+        </div>
     );
 }
