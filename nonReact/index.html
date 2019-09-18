@@ -13,7 +13,7 @@
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
     <script type="text/javascript">
         var gameObj;
-        var boardSizePx = 500;
+        var boardSizePx = Math.min(window.innerWidth, 500);
         document.addEventListener("readystatechange", function () {
             if (document.readyState == "interactive") {
                 gameObj = new GameEngine(draw);
