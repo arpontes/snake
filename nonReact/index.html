@@ -52,7 +52,7 @@
                 $("#totalPoints").text("Pontos: " + Math.floor(gameData.TotalFrames * gameData.GameConfig.GetSpeed()));
                 $("#state").text(gameData.IsPaused ? "Pausado" : (gameData.IsPlaying ? "Jogando" : ""));
 
-                if (gameData.HasCollision) $("#lose").show();
+                if (gameData.GameOver) $("#lose").show();
                 else $("#lose").hide();
 
                 var root = $(".rootGame").empty();
