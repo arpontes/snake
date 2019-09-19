@@ -6,34 +6,28 @@ import Game from './Game';
 import GameNotStarted from './GameNotStarted';
 import Controller from './Controller';
 
-import { makeStyles } from '@material-ui/styles';
-
-const boardSizePx = Math.min(window.innerWidth, 500);
-const useStyles = makeStyles({ root: { position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" } });
+const boardSizePx = Math.min(window.innerWidth - 20, 500);
 function App() {
     const [gameState, setGameState] = useState(null);
     const [gameEngine, setGameEngine] = useState(null);
+    const [showController, setShowController] = useState(false);
 
     useEffect(() => setGameEngine(new GameEngine(data => setGameState(data))), []);
 
     const isPlaying = gameState && gameState.IsPlaying;
     useEffect(() => {
-        if (gameState && gameState.IsPlaying) {
+        if (gameState && gameState.IsPlaying && !showController) {
             const handleInput = ev => gameEngine.HandleInput(ev.keyCode) && ev.preventDefault();
             window.addEventListener("keydown", handleInput);
             return () => window.removeEventListener("keydown", handleInput);
         }
-    }, [isPlaying]);
-
-    const classes = useStyles();
+    }, [isPlaying, showController]);
 
     return gameEngine &&
         <GameObjectContext.Provider value={{ gameEngine, gameState }}>
-            <div className={classes.root} style={{ width: `${boardSizePx}px` }}>
-                <GameNotStarted />
+            <GameNotStarted ShowController={showController} OnSetShowController={show => setShowController(show)} />
             {gameState && <Game BoardSize={boardSizePx} />}
-            {isPlaying && <Controller IsPaused={gameState.IsPaused} HandleInput={gameEngine.HandleInput} />}
-            </div>
+            {showController && isPlaying && <Controller IsPaused={gameState.IsPaused} HandleInput={gameEngine.HandleInput} />}
         </GameObjectContext.Provider>;
 }
 export default App;

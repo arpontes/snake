@@ -1,6 +1,6 @@
 const Direction = { Bottom: "Bottom", Top: "Top", Left: "Left", Right: "Right" };
 function GameEngine(fnDraw) {
-    var cfg, snake, apple, movements, hasCollision, isPlaying, isPaused, totalFrames;
+    var cfg, snake, apple, movements, gameOver, isPlaying, isPaused, totalFrames;
     var tmr, startDateTime, lastTriedMovement = null;
     this.HandleInput = function (key) {
         if (!isPlaying) return;
@@ -22,13 +22,17 @@ function GameEngine(fnDraw) {
         snake = [...gameCfg.GetInitialSnake()];
         apple = null;
         movements = [Direction.Right];
-        hasCollision = false;
+        gameOver = false;
         isPlaying = true;
         isPaused = false;
 
         startDateTime = new Date();
         update();
     };
+    this.Stop = function () {
+        gameOver = true;
+        isPlaying = false;
+    }
 
     function pauseContinue(pause) {
         if (!isPlaying)
@@ -60,7 +64,7 @@ function GameEngine(fnDraw) {
 
     function update() {
         totalFrames++;
-        if (totalFrames > 0) {
+        if (!gameOver && totalFrames > 0) {
             var head = { ...snake[0] };
             var tail = snake[snake.length - 1];
             var walls = cfg.GetWalls();
@@ -85,11 +89,11 @@ function GameEngine(fnDraw) {
             for (var i = snake.length - 1; i > 0; i--)
                 snake[i] = snake[i - 1];
 
-            hasCollision = detectCollision(head, snake.concat(walls));
+            gameOver = detectCollision(head, snake.concat(walls));
 
             snake[0] = head;
 
-            if (hasCollision)
+            if (gameOver)
                 isPlaying = false;
             else {
                 if (apple != null && head.x === apple.x && head.y === apple.y) {
@@ -116,7 +120,7 @@ function GameEngine(fnDraw) {
         }
     }
     function getGameData() {
-        return { GameConfig: cfg, Direction: getLastMovement(), Snake: snake, Apple: apple, HasCollision: hasCollision, IsPlaying: isPlaying, IsPaused: isPaused, TotalFrames: totalFrames };
+        return { GameConfig: cfg, Direction: getLastMovement(), Snake: snake, Apple: apple, GameOver: gameOver, IsPlaying: isPlaying, IsPaused: isPaused, TotalFrames: totalFrames };
     }
     function createRandomApple(size, invalidPoints) {
         for (var i = 0; i < 5; i++) {

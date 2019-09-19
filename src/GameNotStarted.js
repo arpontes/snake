@@ -18,13 +18,22 @@ function PaperComponent(props) {
 }
 
 const useStyles = makeStyles({ root: { cursor: "move" } });
-function GameNotStarted() {
+function GameNotStarted(props) {
     const classes = useStyles();
     const { gameEngine, gameState } = useContext(GameObjectContext);
 
     return (
         <Dialog open={!gameState || !gameState.IsPlaying} PaperComponent={PaperComponent}>
-            <DialogTitle className={classes.root}>Escolha uma dificuldade para iniciar o jogo!</DialogTitle>
+            <DialogTitle className={classes.root}>Escolha a forma de controle!</DialogTitle>
+            <List>
+                <ListItem button onClick={() => props.OnSetShowController(true)} selected={props.ShowController}>
+                    <ListItemText primary="Exibir controles na tela" />
+                </ListItem>
+                <ListItem button onClick={() => props.OnSetShowController(false)} selected={!props.ShowController}>
+                    <ListItemText primary="Utilizar setas do teclado" />
+                </ListItem>
+            </List>
+            <DialogTitle>Escolha a dificuldade para iniciar o jogo!</DialogTitle>
             <List>
                 {Object.keys(GameModels).map(level => (
                     <ListItem key={level} button onClick={() => gameEngine.Start(GameModels[level])}>
