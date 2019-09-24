@@ -27,7 +27,7 @@ function App() {
         <GameObjectContext.Provider value={{ gameEngine, gameState }}>
             <GameNotStarted ShowController={showController} OnSetShowController={show => setShowController(show)} />
             {gameState && <Game BoardSize={boardSizePx} />}
-            {showController && isPlaying && <Controller IsPaused={gameState.IsPaused} HandleInput={gameEngine.HandleInput} />}
+            {showController && isPlaying && <Controller IsPaused={gameState.IsPaused} />}
         </GameObjectContext.Provider>;
 }
 export default App;
