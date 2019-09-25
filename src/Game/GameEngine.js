@@ -1,20 +1,27 @@
 const Direction = { Bottom: "Bottom", Top: "Top", Left: "Left", Right: "Right" };
+
+export const Inputs = { Up: 1, Down: 2, Left: 3, Right: 4, StartPause: 5 };
+const dictInputDirectionConverter = { [Inputs.Up]: Direction.Top, [Inputs.Down]: Direction.Bottom, [Inputs.Left]: Direction.Left, [Inputs.Right]: Direction.Right };
+
 function GameEngine(fnDraw) {
     var cfg, snake, apple, movements, gameOver, isPlaying, isPaused, totalFrames;
     var tmr, startDateTime, lastTriedMovement = null;
-    this.HandleInput = function (key) {
-        if (!isPlaying) return;
-        if (isPaused && key !== 32)
+    this.HandleInput = function (input) {
+        if (!isPlaying) return false;
+        if (isPaused && input !== Inputs.StartPause)
             return false;
 
-        switch (key) {
-            case 32: pauseContinue(!isPaused); return true;
-            case 38: lastTriedMovement = Direction.Top; return true;
-            case 40: lastTriedMovement = Direction.Bottom; return true;
-            case 37: lastTriedMovement = Direction.Left; return true;
-            case 39: lastTriedMovement = Direction.Right; return true;
-            default: return false;
+        if (input === Inputs.StartPause) {
+            pauseContinue(!isPaused);
+            return true;
         }
+
+        var movement = dictInputDirectionConverter[input];
+        if (movement) {
+            lastTriedMovement = movement;
+            return true;
+        }
+        return false;
     };
     this.Start = function (gameCfg) {
         totalFrames = -1;

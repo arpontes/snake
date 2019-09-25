@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { ArrowBack, ArrowForward, ArrowUpward, ArrowDownward, Pause, PlayArrow } from '@material-ui/icons';
 import GameObjectContext from './Context';
+import { Inputs } from './Game/GameEngine';
 
 const buttonSize = 70;
 const halfSize = buttonSize / 2;
@@ -13,11 +14,11 @@ function Controller(props) {
     const midPos = `calc(50% - ${halfSize}px)`;
     return (
         <div className={classes.root}>
-            <CtrlButton Icon={<ArrowUpward />} Position={{ top: 0, left: midPos }} onClick={() => gameEngine.HandleInput(38)} />
-            <CtrlButton Icon={<ArrowDownward />} Position={{ bottom: 0, left: midPos }} onClick={() => gameEngine.HandleInput(40)} />
-            <CtrlButton Icon={<ArrowBack />} Position={{ left: 0, top: midPos }} onClick={() => gameEngine.HandleInput(37)} />
-            <CtrlButton Icon={<ArrowForward />} Position={{ right: 0, top: midPos }} onClick={() => gameEngine.HandleInput(39)} />
-            <CtrlButton Icon={props.IsPaused ? <PlayArrow /> : <Pause />} Position={{ left: midPos, top: midPos }} onClick={() => gameEngine.HandleInput(32)} />
+            <CtrlButton Icon={<ArrowUpward />} Position={{ top: 0, left: midPos }} onClick={() => gameEngine.HandleInput(Inputs.Up)} />
+            <CtrlButton Icon={<ArrowDownward />} Position={{ bottom: 0, left: midPos }} onClick={() => gameEngine.HandleInput(Inputs.Down)} />
+            <CtrlButton Icon={<ArrowBack />} Position={{ left: 0, top: midPos }} onClick={() => gameEngine.HandleInput(Inputs.Left)} />
+            <CtrlButton Icon={<ArrowForward />} Position={{ right: 0, top: midPos }} onClick={() => gameEngine.HandleInput(Inputs.Right)} />
+            <CtrlButton Icon={props.IsPaused ? <PlayArrow /> : <Pause />} Position={{ left: midPos, top: midPos }} onClick={() => gameEngine.HandleInput(Inputs.StartPause)} />
         </div>
     );
 } export default Controller;
