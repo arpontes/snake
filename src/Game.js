@@ -8,27 +8,6 @@ import { makeStyles } from '@material-ui/styles';
 import imgApple from './images/apple.png';
 import imgSnakeHead from './images/head.png';
 
-const blockStyles = {
-    wallBlock: { borderRadius: "0", backgroundColor: "gray" },
-    apple: { borderColor: "transparent", backgroundImage: `url(${imgApple})`, backgroundRepeat: "no-repeat", backgroundSize: "contain" },
-    snakeBody: { borderColor: "#34560f", backgroundColor: "#89b929", transform: "scale(.9)" }
-};
-const snakeHead = {
-    ...blockStyles.snakeBody,
-    borderColor: "transparent",
-    backgroundColor: "transparent",
-    backgroundImage: `url(${imgSnakeHead})`,
-    backgroundRepeat: "no-repeat",
-    backgroundSize: "contain",
-    backgroundPosition: "4px center"
-};
-const Direction = {
-    "Top": { ...snakeHead, transform: "scale(1.8) rotate(-90deg)" },
-    "Bottom": { ...snakeHead, transform: "scale(1.8) rotate(90deg)" },
-    "Left": { ...snakeHead, transform: "scale(1.8) rotate(-180deg)" },
-    "Right": { ...snakeHead, transform: "scale(1.8)" }
-};
-
 const useGameStyles = makeStyles({
     root: { position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" },
     board: { position: "relative", border: "1px solid lightgray" }
@@ -40,15 +19,14 @@ export default function Game(props) {
     const cfg = gameState.GameConfig;
     const size = props.BoardSize / cfg.GetSize();
 
-    const buildSnakeClassObject = isHead => isHead ? gameState.Direction : "snakeBody";
-
     return (
         <div className={classes.root} style={{ width: `${props.BoardSize}px` }}>
             <StateBar />
             <div className={classes.board} style={{ width: `${props.BoardSize}px`, height: `${props.BoardSize}px` }}>
-                {cfg.GetWalls().map((point, idx) => <Block key={idx} size={size} point={point} className="wallBlock" />)}
-                {gameState.Snake.map((point, idx) => <Block key={idx} size={size} point={point} className={buildSnakeClassObject(idx === 0)} />)}
-                {gameState.Apple && <Block size={size} point={gameState.Apple} className="apple" />}
+                {cfg.GetWalls().map((point, idx) => <Block key={idx} size={size} point={point} classNames={["wallBlock"]} />)}
+                {gameState.Snake.map((point, idx) => <Block key={idx} size={size} point={point}
+                    classNames={["snakeBody"].concat(idx === 0 ? ["snakeHead", gameState.Direction] : [])} />)}
+                {gameState.Apple && <Block size={size} point={gameState.Apple} classNames={["apple"]} />}
             </div>
         </div>
     );
@@ -57,15 +35,28 @@ export default function Game(props) {
 
 const useBlockStyles = makeStyles({
     root: { position: "absolute", borderWidth: "1px", borderStyle: "solid", borderRadius: "50%" },
-    ...blockStyles,
-    ...Direction
+    wallBlock: { borderRadius: "0", backgroundColor: "gray" },
+    apple: { borderColor: "transparent", backgroundImage: `url(${imgApple})`, backgroundRepeat: "no-repeat", backgroundSize: "contain" },
+    snakeBody: { borderColor: "#34560f", backgroundColor: "#89b929", transform: "scale(.9)" },
+    snakeHead: {
+        borderColor: "transparent",
+        backgroundColor: "transparent",
+        backgroundImage: `url(${imgSnakeHead})`,
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "contain",
+        backgroundPosition: "4px center"
+    },
+    Top: { transform: "scale(1.8) rotate(-90deg)" },
+    Bottom: { transform: "scale(1.8) rotate(90deg)" },
+    Left: { transform: "scale(1.8) rotate(-180deg)" },
+    Right: { transform: "scale(1.8)" }
 });
 function Block(props) {
     const size = `${props.size}px`;
     const rect = { width: size, height: size, left: `${props.point.x * props.size}px`, top: `${props.point.y * props.size}px` };
     const classes = useBlockStyles();
 
-    return <div className={`${classes.root} ${classes[props.className]}`} style={rect} />;
+    return <div className={`${classes.root} ${props.classNames.map(x => classes[x]).join(" ")}`} style={rect} />;
 }
 
 
